@@ -1,2 +1,2 @@
 # Hangman
-Hangman game
+Hangman game in HTML,CSS and JavaScript
