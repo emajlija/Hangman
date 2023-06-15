@@ -97,7 +97,7 @@ function makeGuess(letter) {
 
 function createVirtualKeyboard() {
   for (let i = 65; i <= 90; i++) {
-    const letter = String.fromCharCode(i);
+    const letter = String.fromCharCode(i).toLowerCase();
     const button = document.createElement("button");
     button.textContent = letter;
     keyboard.appendChild(button);
