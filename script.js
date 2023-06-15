@@ -19,10 +19,10 @@ function displayWord() {
     .split("")
     .map(
       (letter) => `
-          <span class="letter">
-            ${correctLetters.includes(letter) ? letter : ""}
-          </span>
-        `
+      <span class="letter">
+        ${correctLetters.includes(letter) ? letter : ""}
+      </span>
+    `
     )
     .join("")}`;
 
@@ -35,9 +35,9 @@ function displayWord() {
 
 function updateWrongLetters() {
   wrongLettersEl.innerHTML = `
-        ${wrongLetters.length > 0 ? "<p>Wrong letters:</p>" : ""}
-        ${wrongLetters.map((letter) => `<span>${letter}</span>`).join("")}
-      `;
+    ${wrongLetters.length > 0 ? "<p>Wrong letters:</p>" : ""}
+    ${wrongLetters.map((letter) => `<span>${letter}</span>`).join("")}
+  `;
 
   figureParts.forEach((part, index) => {
     const errors = wrongLetters.length;
@@ -66,21 +66,31 @@ function showNotification() {
 function handleKeyboardClick(event) {
   if (event.target.tagName === "BUTTON") {
     const letter = event.target.textContent;
+    makeGuess(letter);
+  }
+}
 
-    if (selectedWord.includes(letter)) {
-      if (!correctLetters.includes(letter)) {
-        correctLetters.push(letter);
-        displayWord();
-      } else {
-        showNotification();
-      }
+function handleKeyPress(event) {
+  const letter = event.key.toLowerCase();
+  if (/^[a-z]$/.test(letter)) {
+    makeGuess(letter);
+  }
+}
+
+function makeGuess(letter) {
+  if (selectedWord.includes(letter)) {
+    if (!correctLetters.includes(letter)) {
+      correctLetters.push(letter);
+      displayWord();
     } else {
-      if (!wrongLetters.includes(letter)) {
-        wrongLetters.push(letter);
-        updateWrongLetters();
-      } else {
-        showNotification();
-      }
+      showNotification();
+    }
+  } else {
+    if (!wrongLetters.includes(letter)) {
+      wrongLetters.push(letter);
+      updateWrongLetters();
+    } else {
+      showNotification();
     }
   }
 }
@@ -107,3 +117,4 @@ displayWord();
 updateWrongLetters();
 createVirtualKeyboard();
 keyboard.addEventListener("click", handleKeyboardClick);
+window.addEventListener("keydown", handleKeyPress);
