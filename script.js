@@ -79,20 +79,21 @@ function handleKeyPress(event) {
 
 function makeGuess(letter) {
   letter = letter.toLowerCase(); // Convert the letter to lowercase
-}
-if (selectedWord.includes(letter)) {
-  if (!correctLetters.includes(letter)) {
-    correctLetters.push(letter);
-    displayWord();
+
+  if (selectedWord.includes(letter)) {
+    if (!correctLetters.includes(letter)) {
+      correctLetters.push(letter);
+      displayWord();
+    } else {
+      showNotification();
+    }
   } else {
-    showNotification();
-  }
-} else {
-  if (!wrongLetters.includes(letter)) {
-    wrongLetters.push(letter);
-    updateWrongLetters();
-  } else {
-    showNotification();
+    if (!wrongLetters.includes(letter)) {
+      wrongLetters.push(letter);
+      updateWrongLetters();
+    } else {
+      showNotification();
+    }
   }
 }
 
