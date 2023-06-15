@@ -2,14 +2,14 @@ const wordEl = document.getElementById("word");
 const wrongLettersEl = document.getElementById("wrong-letters");
 const playAgainBtn = document.getElementById("play-button");
 const popup = document.getElementById("popup-container");
-const finalMesage = document.getElementById("final-message");
+const finalMessage = document.getElementById("final-message");
 const notification = document.getElementById("notification-container");
+const keyboard = document.getElementById("keyboard");
 
 const figureParts = document.querySelectorAll(".figure-part");
-const words = ["programming", "aplication", "interface", "wizard"];
+const words = ["programming", "application", "interface", "wizard"];
 
 let selectedWord = words[Math.floor(Math.random() * words.length)];
-//console.log(selectedWord);
 
 const correctLetters = [];
 const wrongLetters = [];
@@ -18,27 +18,27 @@ function displayWord() {
   wordEl.innerHTML = `${selectedWord
     .split("")
     .map(
-      (letter) => `<span class="letter">
-    ${correctLetters.includes(letter) ? letter : ""}
-    </span>`
+      (letter) => `
+          <span class="letter">
+            ${correctLetters.includes(letter) ? letter : ""}
+          </span>
+        `
     )
     .join("")}`;
 
   const innerWord = wordEl.innerText.replace(/\n/g, "");
   if (innerWord === selectedWord) {
-    finalMesage.innerText = "Congratulations! You won :)";
+    finalMessage.innerText = "Congratulations! You won :)";
     popup.style.display = "flex";
   }
 }
-//update wrong letters
-function updateWrongLetterEl() {
-  //display wrong letters
-  wrongLettersEl.innerHTML = `
-  ${wrongLetters.length > 0 ? "<p>Wrong letters:</p>" : ""}
-  ${wrongLetters.map((letter) => `<span>${letter}</span>`)}
-  `;
 
-  //display parts
+function updateWrongLetters() {
+  wrongLettersEl.innerHTML = `
+        ${wrongLetters.length > 0 ? "<p>Wrong letters:</p>" : ""}
+        ${wrongLetters.map((letter) => `<span>${letter}</span>`).join("")}
+      `;
+
   figureParts.forEach((part, index) => {
     const errors = wrongLetters.length;
 
@@ -49,14 +49,12 @@ function updateWrongLetterEl() {
     }
   });
 
-  //check if lost
   if (wrongLetters.length === figureParts.length) {
-    finalMesage.innerText = "You lost! :(";
+    finalMessage.innerText = "You lost! :(";
     popup.style.display = "flex";
   }
 }
 
-//show notification
 function showNotification() {
   notification.classList.add("show");
 
@@ -65,15 +63,13 @@ function showNotification() {
   }, 2000);
 }
 
-//keydown letter press
-window.addEventListener("keydown", (e) => {
-  //console.log(e.keyCode);
-  if (e.code >= 'KeyA' && e.code <= 'KeyZ') {
-    const letter = e.key;
+function handleKeyboardClick(event) {
+  if (event.target.tagName === "BUTTON") {
+    const letter = event.target.textContent;
+
     if (selectedWord.includes(letter)) {
       if (!correctLetters.includes(letter)) {
         correctLetters.push(letter);
-
         displayWord();
       } else {
         showNotification();
@@ -81,28 +77,33 @@ window.addEventListener("keydown", (e) => {
     } else {
       if (!wrongLetters.includes(letter)) {
         wrongLetters.push(letter);
-
-        updateWrongLetterEl();
+        updateWrongLetters();
       } else {
         showNotification();
       }
     }
   }
-});
+}
 
-//restart and play again
+function createVirtualKeyboard() {
+  for (let i = 65; i <= 90; i++) {
+    const letter = String.fromCharCode(i);
+    const button = document.createElement("button");
+    button.textContent = letter;
+    keyboard.appendChild(button);
+  }
+}
+
 playAgainBtn.addEventListener("click", () => {
-  //empty arrays
   correctLetters.splice(0);
   wrongLetters.splice(0);
-
   selectedWord = words[Math.floor(Math.random() * words.length)];
-
   displayWord();
-
-  updateWrongLetterEl();
-
+  updateWrongLetters();
   popup.style.display = "none";
 });
 
 displayWord();
+updateWrongLetters();
+createVirtualKeyboard();
+keyboard.addEventListener("click", handleKeyboardClick);
