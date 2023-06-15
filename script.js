@@ -78,20 +78,21 @@ function handleKeyPress(event) {
 }
 
 function makeGuess(letter) {
-  if (selectedWord.includes(letter)) {
-    if (!correctLetters.includes(letter)) {
-      correctLetters.push(letter);
-      displayWord();
-    } else {
-      showNotification();
-    }
+  letter = letter.toLowerCase(); // Convert the letter to lowercase
+}
+if (selectedWord.includes(letter)) {
+  if (!correctLetters.includes(letter)) {
+    correctLetters.push(letter);
+    displayWord();
   } else {
-    if (!wrongLetters.includes(letter)) {
-      wrongLetters.push(letter);
-      updateWrongLetters();
-    } else {
-      showNotification();
-    }
+    showNotification();
+  }
+} else {
+  if (!wrongLetters.includes(letter)) {
+    wrongLetters.push(letter);
+    updateWrongLetters();
+  } else {
+    showNotification();
   }
 }
 
